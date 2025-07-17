@@ -1,5 +1,7 @@
 # React Native Reproducer
 
+https://github.com/facebook/react-native/issues/52657
+
 > [!IMPORTANT]  
 > Do not just **fork** this repository, but use instead the [![Use this template](https://img.shields.io/badge/-Use%20this%20template-brightgreen)](https://github.com/cortinico/reproducer-react-native/generate) button on GitHub.
 
