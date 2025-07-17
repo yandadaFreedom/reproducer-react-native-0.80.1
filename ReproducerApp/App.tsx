@@ -64,13 +64,13 @@ const App = () => {
           <StickyHeader style={styles.parkHead}>
             <View style={styles.tabContainer}>
               <TouchableOpacity style={styles.tab} onPress={() => handleTap(1)}>
-                <Text style={styles.tabText}>11122</Text>
+                <Text style={styles.tabText}>tab1</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.tab} onPress={() => handleTap(2)}>
-                <Text style={styles.tabText}>222</Text>
+                <Text style={styles.tabText}>tab2</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.tab} onPress={() => handleTap(3)}>
-                <Text style={styles.tabText}>333</Text>
+                <Text style={styles.tabText}>tab3</Text>
               </TouchableOpacity>
             </View>
             {currentId === 1 && (
