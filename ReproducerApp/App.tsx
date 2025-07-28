@@ -4,17 +4,12 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
   Animated as RNAnimated,
 } from "react-native";
 import StickyHeader from './component/sticky';
-import { ScrollViewContext } from './component/context';
-
-const AnimatedScrollView = RNAnimated.createAnimatedComponent(ScrollView);
+import ScrollView from './component/scrollView';
 
 const App = () => {
-
-  const scrollOffset = useRef(new RNAnimated.Value(0)).current;
 
   const obj = {
     1: "tab1",
@@ -41,25 +36,9 @@ const App = () => {
     }
   };
 
-
-  const contextValue = useMemo(() => {
-    return {
-      scrollOffset,
-    };
-  }, [scrollOffset]);
-
-  const scrollHandler = RNAnimated.event([{ nativeEvent: { contentOffset: { y: scrollOffset } } }], {
-    useNativeDriver: true,
-    listener: (event) => {
-      const y = event.nativeEvent.contentOffset.y || 0
-      console.log('y', y, (scrollOffset as any).__getValue())
-    }
-  });
-
   return (
     <View style={styles.rootView}>
-      <AnimatedScrollView style={[styles.container, { flex: 1, marginTop: 84 }]} onScroll={scrollHandler} overScrollMode={'never'}>
-        <ScrollViewContext.Provider value={contextValue}>
+      <ScrollView style={[styles.container, { flex: 1, marginTop: 84 }]} overScrollMode={'never'}>
           <View style={styles.empty} />
           <StickyHeader style={styles.parkHead}>
             <View style={styles.tabContainer}>
@@ -91,14 +70,13 @@ const App = () => {
                 <View style={styles.red}></View>
               </View>
             )}
-          </StickyHeader>
+          </StickyHeader> 
 
           {/* Content */}
           <View style={[styles.content, { height: heightValue[currentId] }]}>
             <Text style={styles.contentText}>{content}</Text>
           </View>
-        </ScrollViewContext.Provider>
-      </AnimatedScrollView>
+      </ScrollView>
     </View>
   );
 };

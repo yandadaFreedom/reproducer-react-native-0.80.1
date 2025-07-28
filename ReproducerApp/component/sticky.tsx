@@ -1,17 +1,30 @@
-import { useRef, useContext, forwardRef, useMemo, createElement, useEffect } from 'react'
-import { Animated, StyleSheet, useAnimatedValue } from 'react-native'
+import { useRef, useContext, forwardRef, createElement } from 'react'
+import { StyleSheet } from 'react-native'
+import Animated, { 
+  useSharedValue, 
+  useAnimatedStyle, 
+  interpolate,
+  Extrapolate,
+  withTiming
+} from 'react-native-reanimated'
 import { ScrollViewContext } from './context.ts'
 
-const _StickyHeader = forwardRef((props = {}, ref) => {
+interface StickyHeaderProps {
+  style?: any;
+  children?: React.ReactNode;
+  [key: string]: any;
+}
+
+const _StickyHeader = forwardRef<any, StickyHeaderProps>((props, _ref) => {
   const {
     style,
   } = props
 
   const scrollViewContext = useContext(ScrollViewContext)
   const { scrollOffset } = scrollViewContext
-  const headerRef = useRef(null)
+  const headerRef = useRef<any>(null)
 
-  const headerTopAnimated = useAnimatedValue(0)
+  const headerTopAnimated = useSharedValue(0)
 
   function onLayout () {
     if (headerRef.current) {
@@ -19,38 +32,25 @@ const _StickyHeader = forwardRef((props = {}, ref) => {
       if (scrollViewRef && scrollViewRef.current) {
         headerRef.current.measureLayout(
           scrollViewRef.current,
-          (left, top) => {
-            Animated.timing(headerTopAnimated, {
-              toValue: top,
-              duration: 0,
-              useNativeDriver: true
-            }).start()
+          (left: number, top: number) => {
+            headerTopAnimated.value = withTiming(top, { duration: 0 })
           }
         )
       }
     }
   }
 
-  useEffect(() => {
-
-    const listener = scrollOffset.addListener((state: { value: number }) => {
-      console.log('listener', state.value)
-    })
-
-    return () => {
-      scrollOffset.removeListener(listener)
-    }
-  }, [])
-
-
-  const animatedStyle = useMemo(() => {
-    const translateY = Animated.subtract(scrollOffset, 200).interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-      extrapolateLeft: 'clamp',
-      extrapolateRight: 'extend'
-    })
-
+ 
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      scrollOffset.value - headerTopAnimated.value,
+      [0, 1],
+      [0, 1],
+      {
+        extrapolateLeft: Extrapolate.CLAMP,
+        extrapolateRight: Extrapolate.EXTEND
+      }
+    )
     return {
       transform: [{ translateY: translateY }]
     }
@@ -63,7 +63,7 @@ const _StickyHeader = forwardRef((props = {}, ref) => {
       Object.assign({}, props, {
         onLayout,
         ref: headerRef,
-        style:  Object.assign({}, styles.content, style, animatedStyle)
+        style: Object.assign({}, styles.content, style, animatedStyle)
       }),
       props.children
     )
