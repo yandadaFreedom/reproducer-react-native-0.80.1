@@ -3,9 +3,8 @@ import { ScrollView, GestureHandlerRootView } from 'react-native-gesture-handler
 import Animated, { useAnimatedRef, useAnimatedScrollHandler, useSharedValue, useScrollOffset } from 'react-native-reanimated';
 import { ScrollViewContext } from './context';
 
-
+const AnimatedScrollViewComponent = Animated.createAnimatedComponent(ScrollView);
 const _ScrollView = forwardRef((props = {}, ref) => {
-    // const scrollOffset = useSharedValue(0)
 
     const scrollViewRef = useAnimatedRef();
     const scrollOffset = useScrollOffset(scrollViewRef);
@@ -17,17 +16,12 @@ const _ScrollView = forwardRef((props = {}, ref) => {
         };
     }, [scrollOffset, scrollViewRef]);
 
-    // const scrollHandler = useAnimatedScrollHandler((event) => {
-    //     console.log('scrollHandler', event.contentOffset.y)
-    //     scrollOffset.value = event.contentOffset.y;
-    // })
-
     const onContentSizeChange = () => {
         console.log('onContentSizeChange', scrollOffset)
     }
     return (
         <GestureHandlerRootView style={{flex: 1}}>
-        <Animated.ScrollView
+        <AnimatedScrollViewComponent
             {...props}
             style={props.style}
             ref={scrollViewRef}
@@ -36,7 +30,7 @@ const _ScrollView = forwardRef((props = {}, ref) => {
             <ScrollViewContext.Provider value={contextValue}>
                 {props.children}
             </ScrollViewContext.Provider>
-        </Animated.ScrollView>
+        </AnimatedScrollViewComponent>
         </GestureHandlerRootView>
     );
 });
