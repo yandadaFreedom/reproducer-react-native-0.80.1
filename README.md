@@ -1,5 +1,7 @@
 # reproducer-react-native-0.80.1
 
+https://github.com/facebook/react-native/issues/53007
+
 ![Build](https://github.com/yandadaFreedom/reproducer-react-native-0.80.1/workflows/Pre%20Merge%20Checks/badge.svg)
 
 This is your new React Native Reproducer project.
